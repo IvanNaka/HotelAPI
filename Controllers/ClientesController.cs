@@ -22,80 +22,83 @@ namespace HotelAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Clientes>>> GetClientes()
+        public  IActionResult GetClientes()
         {
-            return await _context.Clientes.ToListAsync();
+            using (var _context = new HotelContext()){
+                List<Clientes> ListaClientes = _context.Clientes.ToList();
+                return Ok(ListaClientes);
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Clientes>> GetClientes(int id)
+        public IActionResult GetClientesPorId(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            using (var _context = new HotelContext()){
+                var cliente =  _context.Clientes.Find(id);
 
-            if (cliente == null)
-            {
-                return NotFound();
+                if (cliente == null)
+                {
+                    return NotFound("Cliente não encontrado!");
+                }
+
+                return Ok(cliente);
             }
 
-            return cliente;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Clientes>> PostClientes(Clientes cliente)
+        public IActionResult PostClientes([FromBody] Clientes cliente)
         {
-            _context.Clientes.Add(cliente);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetClientes", new { id = cliente.IdCliente }, cliente);
+            using (var _context = new HotelContext()){
+                try{
+                    _context.Clientes.Add(cliente);
+                    _context.SaveChanges();
+                }catch{
+                    return BadRequest("Erro ao cadastrar cliente!");
+                }
+                return Ok(cliente);
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutClientes(int id, Clientes cliente)
+        [HttpPut]
+        public IActionResult PutClientes(Clientes cliente)
         {
-            if (id != cliente.IdCliente)
-            {
-                return BadRequest();
-            }
+            using (var _context = new HotelContext()){
+                var clienteBanco =  _context.Clientes.Find(cliente.IdCliente);
 
-            _context.Entry(cliente).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientesExists(id))
+                if (clienteBanco == null)
                 {
-                    return NotFound();
+                    return NotFound("Cliente não encontrado!");
                 }
-                else
-                {
-                    throw;
+                try{
+                    _context.Entry(clienteBanco).CurrentValues.SetValues(cliente);
+                    _context.SaveChanges();
+                    return Ok(cliente);
+                }catch{
+                    return BadRequest("Erro ao cadastrar cliente!");
                 }
             }
-
-            return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClientes(int id)
+
+        [HttpDelete]
+        public IActionResult DeleteClientes(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
-            {
-                return NotFound();
+            using (var _context = new HotelContext()){
+                var clienteBanco =  _context.Clientes.Find(id);
+
+                if (clienteBanco == null)
+                {
+                    return NotFound("Cliente não encontrado!");
+                }
+                try{
+                    _context.Clientes.Remove(clienteBanco);
+                    _context.SaveChanges();
+                    return Ok();
+                }catch{
+                    return BadRequest("Erro ao deletar cliente!");
+                }
             }
-
-            _context.Clientes.Remove(cliente);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ClientesExists(int id)
-        {
-            return _context.Clientes.Any(e => e.IdCliente == id);
         }
     }
 }

@@ -13,89 +13,85 @@ namespace HotelAPI.Controllers
     [Route("[controller]")]
     public class EnderecoController : Controller
     {
-        private readonly HotelContext _context;
-
-        public EnderecoController(HotelContext context)
-        {
-            _context = context;
-        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Endereco>>> GetEndereco()
+        public IActionResult GetEndereco()
         {
-            return await _context.Endereco.ToListAsync();
+            using (var _context = new HotelContext()){
+                List<Endereco> ListaEnderecos = _context.Endereco.ToList();
+                return Ok(ListaEnderecos);
+            }
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Endereco>> GetEndereco(int id)
+        public IActionResult GetEndereco(int id)
         {
-            var endereco = await _context.Endereco.FindAsync(id);
+            using (var _context = new HotelContext()){
+                var endereco =  _context.Endereco.Find(id);
 
-            if (endereco == null)
-            {
-                return NotFound();
+                if (endereco == null)
+                {
+                    return NotFound("Endereço não encontrado!");
+                }
+
+                return Ok(endereco);
             }
-
-            return endereco;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Endereco>> PostEndereco(Endereco endereco)
+        public IActionResult PostEndereco(Endereco endereco)
         {
-            _context.Endereco.Add(endereco);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetEndereco", new { id = endereco.IdEndereco }, endereco);
+            using (var _context = new HotelContext()){
+                try{
+                    _context.Endereco.Add(endereco);
+                    _context.SaveChanges();
+                }catch{
+                    return BadRequest("Erro ao cadastrar cliente!");
+                }
+                return Ok(endereco);
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEndereco(int id, Endereco endereco)
+        [HttpPut]
+        public  IActionResult PutEndereco(Endereco endereco)
         {
-            if (id != endereco.IdEndereco)
-            {
-                return BadRequest();
-            }
+            using (var _context = new HotelContext()){
+                var enderecoBanco =  _context.Endereco.Find(endereco.IdEndereco);
 
-            _context.Entry(endereco).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EnderecoExists(id))
+                if (enderecoBanco == null)
                 {
-                    return NotFound();
+                    return NotFound("Endereço não encontrado!");
                 }
-                else
-                {
-                    throw;
+                try{
+                    _context.Entry(enderecoBanco).CurrentValues.SetValues(endereco);
+                    _context.SaveChanges();
+                    return Ok(endereco);
+                }catch{
+                    return BadRequest("Erro ao editar endereço!");
                 }
             }
-
-            return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEndereco(int id)
+        [HttpDelete]
+        public  IActionResult DeleteEndereco(int id)
         {
-            var endereco = await _context.Endereco.FindAsync(id);
-            if (endereco == null)
-            {
-                return NotFound();
+            using (var _context = new HotelContext()){
+                var enderecoBanco =  _context.Endereco.Find(id);
+
+                if (enderecoBanco == null)
+                {
+                    return NotFound("Endereço não encontrado!");
+                }
+                try{
+                    _context.Endereco.Remove(enderecoBanco);
+                    _context.SaveChanges();
+                    return Ok();
+                }catch{
+                    return BadRequest("Erro ao deletar endereço!");
+                }
             }
-
-            _context.Endereco.Remove(endereco);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool EnderecoExists(int id)
-        {
-            return _context.Endereco.Any(e => e.IdEndereco == id);
-        }
     }
 }
