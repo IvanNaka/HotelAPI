@@ -40,11 +40,8 @@ namespace WebApi
                 }catch(Exception e){
                     return BadRequest(e.Message);
                 }
-                
+            }
         }
-        }
-
-
 
         [HttpPut]
         public IActionResult PutPagam(Pagamento pagamento)
