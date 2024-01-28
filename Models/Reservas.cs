@@ -16,4 +16,8 @@ public class Reserva
     [ForeignKey("Funcionario")]
     public int IdFuncionario { get; set; }
     public Funcionario Funcionario { get; set; }
+
+    [ForeignKey("Quarto")]
+    public int IdQuarto { get; set; }
+    public Quarto Quarto { get; set; }
 }

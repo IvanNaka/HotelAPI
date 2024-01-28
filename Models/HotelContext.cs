@@ -33,7 +33,12 @@ namespace Hotel
                 .HasOne(pc => pc.Pagamento)
                 .WithMany(p => p.PagamentoDeServicos)
                 .HasForeignKey(pc => pc.IdPagamento)
-                .OnDelete(DeleteBehavior.NoAction);  
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Reserva>()
+                .HasOne(pc => pc.Quarto)
+                .WithMany(p => p.Reserva)
+                .HasForeignKey(pc => pc.IdQuarto)
+                .OnDelete(DeleteBehavior.NoAction); 
             modelBuilder.Entity<Endereco>().Property(m => m.IdCliente).IsRequired(false);            
         }
     }

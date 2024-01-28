@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelAPI.Controllers
 {
+    [ApiController]
     [Route("[controller]")]
     public class EnderecoController : Controller
     {

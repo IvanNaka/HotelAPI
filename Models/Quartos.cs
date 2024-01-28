@@ -16,4 +16,6 @@ public class Quarto
     [ForeignKey("TipoQuarto")]
     public int IdTipoQuarto { get; set; }
     public TipoQuarto TipoQuarto { get; set; }
+
+    public ICollection<Reserva>? Reserva { get; set; }
 }

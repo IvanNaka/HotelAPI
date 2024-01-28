@@ -4,16 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelAPI.Controllers
 {
 
+    [ApiController]
     [Route("[controller]")]
     public class ClientesController : Controller
     {
-        private readonly HotelContext _context;
-
-        public ClientesController(HotelContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet]
         public  IActionResult GetClientes()
         {
