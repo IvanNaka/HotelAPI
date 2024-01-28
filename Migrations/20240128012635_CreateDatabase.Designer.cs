@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hotel.Migrations
+namespace HotelAPI.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    [Migration("20240127201009_CreateDatabase")]
+    [Migration("20240128012635_CreateDatabase")]
     partial class CreateDatabase
     {
         /// <inheritdoc />

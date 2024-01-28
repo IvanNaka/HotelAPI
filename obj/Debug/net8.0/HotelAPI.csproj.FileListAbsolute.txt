@@ -137,3 +137,4 @@ C:\Users\ivann\Downloads\C#\HotelAPI\obj\Debug\net8.0\refint\HotelAPI.dll
 C:\Users\ivann\Downloads\C#\HotelAPI\obj\Debug\net8.0\HotelAPI.pdb
 C:\Users\ivann\Downloads\C#\HotelAPI\obj\Debug\net8.0\HotelAPI.genruntimeconfig.cache
 C:\Users\ivann\Downloads\C#\HotelAPI\obj\Debug\net8.0\ref\HotelAPI.dll
+C:\Users\ivann\Downloads\C#\HotelAPI\obj\Debug\net8.0\HotelAPI.sourcelink.json

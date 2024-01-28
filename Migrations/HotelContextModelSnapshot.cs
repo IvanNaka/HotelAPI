@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hotel.Migrations
+namespace HotelAPI.Migrations
 {
     [DbContext(typeof(HotelContext))]
     partial class HotelContextModelSnapshot : ModelSnapshot
