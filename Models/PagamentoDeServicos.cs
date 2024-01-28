@@ -5,9 +5,9 @@ public class PagamentoDeServicos
     [Key]
     public int IdPagamentoServico { get; set; }
 
-    [ForeignKey("Pagamento")]
-    public int IdPagamento { get; set; }
-    public Pagamento Pagamento { get; set; }
+    [ForeignKey("Reserva")]
+    public int IdReserva { get; set; }
+    public Reserva Reserva { get; set; }
 
     [ForeignKey("Servicos")]
     public int IdServicos { get; set; }

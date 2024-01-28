@@ -14,6 +14,4 @@ public class Pagamento
     [ForeignKey("TipoPagamento")]
     public int IdTipoPagamento { get; set; }
     public TipoPagamento TipoPagamento { get; set; }
-    public ICollection<PagamentoDeConsumiveis>? PagamentoDeConsumiveis { get; set; }
-    public ICollection<PagamentoDeServicos>? PagamentoDeServicos { get; set; }
 }

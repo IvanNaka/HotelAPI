@@ -38,7 +38,7 @@ namespace WebApi
         {
             using (var _context = new HotelContext()){
                 try{
-                    Reserva reservaObj = reserva.constructReserva();
+                    reserva.constructReserva();
                 }catch(Exception e){
                     return BadRequest(e.Message);
                 }

@@ -25,14 +25,14 @@ namespace Hotel
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PagamentoDeConsumiveis>()
-                .HasOne(pc => pc.Pagamento)
+                .HasOne(pc => pc.Reserva)
                 .WithMany(p => p.PagamentoDeConsumiveis)
-                .HasForeignKey(pc => pc.IdPagamento)
+                .HasForeignKey(pc => pc.IdReserva)
                .OnDelete(DeleteBehavior.NoAction);  
             modelBuilder.Entity<PagamentoDeServicos>()
-                .HasOne(pc => pc.Pagamento)
+                .HasOne(pc => pc.Reserva)
                 .WithMany(p => p.PagamentoDeServicos)
-                .HasForeignKey(pc => pc.IdPagamento)
+                .HasForeignKey(pc => pc.IdReserva)
                 .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Reserva>()
                 .HasOne(pc => pc.Quarto)

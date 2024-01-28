@@ -20,4 +20,7 @@ public class Reserva
     [ForeignKey("Quarto")]
     public int IdQuarto { get; set; }
     public Quarto Quarto { get; set; }
+
+    public ICollection<PagamentoDeConsumiveis>? PagamentoDeConsumiveis { get; set; }
+    public ICollection<PagamentoDeServicos>? PagamentoDeServicos { get; set; }
 }
