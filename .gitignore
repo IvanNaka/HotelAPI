@@ -28,3 +28,5 @@ obj/Debug/net8.0/refint/HotelAPI.dll
 bin/Debug/net8.0/HotelAPI.dll
 bin/Debug/net8.0/HotelAPI.exe
 bin/Debug/net8.0/HotelAPI.pdb
+bin/Debug/net8.0
+obj/Debug/
