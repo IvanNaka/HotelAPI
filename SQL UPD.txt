@@ -1,0 +1,124 @@
+CREATE TABLE Clientes (
+    IdCliente INT PRIMARY KEY,
+    NomeCliente VARCHAR(64),
+    Nacionalidade VARCHAR(64),
+    EmailCliente VARCHAR(128),
+    TelefoneCliente VARCHAR(32)
+);
+CREATE TABLE Consumiveis (
+    IdConsumiveis INT PRIMARY KEY,
+    DescricaoConsumo VARCHAR(128),
+    ValorConsumo DOUBLE,
+    IdFilial INT,
+    FOREIGN KEY (IdFilial) REFERENCES Filial(IdFilial) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Endereco (
+    IdEndereco INT PRIMARY KEY,
+    Pais VARCHAR(64),
+    Estado VARCHAR(64),
+    Cidade VARCHAR(64),
+    Rua VARCHAR(64),
+    Numero INT,
+    Complemento VARCHAR(64),
+    IdCliente INT,
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(IdCliente) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Filial (
+    IdFilial INT PRIMARY KEY,
+    NomeFilial VARCHAR(64),
+    NumeroQuartos SMALLINT,
+    QtdEstrelas SMALLINT,
+    IdEndereco INT,
+    FOREIGN KEY (IdEndereco) REFERENCES Endereco(IdEndereco) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Funcionario (
+    IdFuncionario INT PRIMARY KEY,
+    NomeFuncionario VARCHAR(128),
+    IdFilial INT,
+    IdTipoFuncionario INT,
+    FOREIGN KEY (IdFilial) REFERENCES Filial(IdFilial) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdTipoFuncionario) REFERENCES TipoFuncionario(IdTipoFuncionario) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Pagamento (
+    IdPagamento INT PRIMARY KEY,
+    DataPagamento DATETIME,
+    ValorTotalPag DOUBLE,
+    IdReserva INT,
+    IdTipoPagamento INT,
+    FOREIGN KEY (IdReserva) REFERENCES Reserva(IdReserva) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdTipoPagamento) REFERENCES TipoPagamento(IdTipoPagamento) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE PagamentoDeServicos (
+    IdPagamentoServico INT PRIMARY KEY,
+    IdReserva INT,
+    IdServicos INT,
+    FOREIGN KEY (IdReserva) REFERENCES Reserva(IdReserva) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdServicos) REFERENCES Servicos(IdServicos) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE PagamentoDeConsumiveis (
+    IdPagamentoConsumivel INT PRIMARY KEY,
+    IdReserva INT,
+    IdConsumiveis INT,
+    QtdConsumiveis INT,
+    RoomService BOOLEAN,
+    FOREIGN KEY (IdReserva) REFERENCES Reserva(IdReserva) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdConsumiveis) REFERENCES Consumiveis(IdConsumiveis) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Quarto (
+    IdQuarto INT PRIMARY KEY,
+    NumeroQuarto SMALLINT,
+    CapacidadeMaxima SMALLINT,
+    Adaptavel BOOLEAN,
+    ValorQuarto DOUBLE,
+    IdFilial INT,
+    IdTipoQuarto INT,
+    FOREIGN KEY (IdFilial) REFERENCES Filial(IdFilial) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdTipoQuarto) REFERENCES TipoQuarto(IdTipoQuarto) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Reserva (
+    IdReserva INT PRIMARY KEY,
+    CheckIn DATETIME,
+    CheckOut DATETIME,
+    Cancelado BOOLEAN,
+    NumPessoas SMALLINT,
+    IdCliente INT,
+    IdFuncionario INT,
+    IdQuarto INT,
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(IdCliente) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdFuncionario) REFERENCES Funcionario(IdFuncionario) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdQuarto) REFERENCES Quarto(IdQuarto) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Servicos (
+    IdServicos INT PRIMARY KEY,
+    DescricaoServico VARCHAR(128),
+    ValorServico DECIMAL,
+    IdFilial INT,
+    FOREIGN KEY (IdFilial) REFERENCES Filial(IdFilial) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE TipoFuncionario (
+    IdTipoFuncionario INT PRIMARY KEY,
+    Descricao VARCHAR(255)
+);
+
+CREATE TABLE TipoPagamento (
+    IdTipoPagamento INT PRIMARY KEY,
+    DescricaoTipoPag VARCHAR(64) NOT NULL
+);
+
+CREATE TABLE TipoQuarto (
+    IdTipoQuarto INT PRIMARY KEY,
+    DescricaoQuarto VARCHAR(128) NOT NULL
+);

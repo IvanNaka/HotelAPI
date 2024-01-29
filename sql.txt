@@ -1,0 +1,180 @@
+use hotel;
+ 
+CREATE TABLE Clientes (
+    IdCliente INT PRIMARY KEY,
+    NomeCliente VARCHAR(64) NOT NULL,
+    Nacionalidade VARCHAR(64) NOT NULL,
+    EmailCliente VARCHAR(128) NOT NULL,
+    TelefoneCliente VARCHAR(32) NOT NULL
+);
+
+CREATE TABLE Endereco ( 
+    IdEndereco INT PRIMARY KEY,
+    Pais VARCHAR(64) NOT NULL,
+    Estado VARCHAR(64) NOT NULL,
+    Cidade VARCHAR(128) NOT NULL,
+    Rua VARCHAR(128) NOT NULL,
+    Numero SMALLINT NOT NULL,
+    Complemento VARCHAR(8),
+    FK_IdCliente INT NULL,	
+);
+
+CREATE TABLE Filiais (
+    IdFilial INT PRIMARY KEY,
+    NomeFilial VARCHAR(64) NOT NULL,
+    NumeroQuartos SMALLINT NOT NULL,
+    QtdEstrelas TINYINT,
+    FK_Endereco_IdEndereco INT NOT NULL,
+);
+
+CREATE TABLE Quartos (
+    NumeroQuarto SMALLINT PRIMARY KEY,
+    CapacidadeMaxima TINYINT NOT NULL,
+    Adaptavel BIT, -- ALGUNS QUARTOS APENAS.
+    FK_Filiais_IdFilial INT NOT NULL,
+    FK_TiposQuarto_IdQuarto TINYINT NOT NULL,
+    FK_Reservas_IdReserva INT NOT NULL,
+    ValorQuarto DECIMAL NOT NULL,
+);
+
+CREATE TABLE TiposQuarto (
+    IdQuarto SMALLINT PRIMARY KEY,
+    DescricaoQuarto VARCHAR(128) NOT NULL,
+);
+
+CREATE TABLE Funcionarios (
+    IdFuncionario INT PRIMARY KEY,
+    NomeFuncionario VARCHAR(128) NOT NULL,
+    FK_Filiais_IdFilial INT NOT NULL,
+    FK_TipoFuncionario_IdTipoFuncionario INT NOT NULL
+);
+
+CREATE TABLE Reservas (
+    IdReserva INT PRIMARY KEY,
+    CheckIn DATETIME NOT NULL,
+    CheckOut DATETIME,
+    Cancelado BIT,
+    NumPessoas TINYINT NOT NULL,
+    FK_Clientes_IdCliente INT NOT NULL,
+    FK_Funcionarios_IdFuncionario INT NOT NULL 
+);
+
+CREATE TABLE Consumíveis ( -- OS OPICIONAIS PRECISAM DE NULL / NOT NULL?
+    IdConsumiveis SMALLINT PRIMARY KEY,
+    DescricaoConsumo VARCHAR(128),
+    ValorConsumo TINYINT,
+    RoomService BIT
+);
+
+CREATE TABLE Servicos (
+    IdServicos INT PRIMARY KEY,
+    DescricaoServico VARCHAR(128),
+    ValorServico DECIMAL
+);
+
+CREATE TABLE TipoFuncionario (
+    IdTipoFuncionario TINYINT PRIMARY KEY,
+    Descricao VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Pagamento (
+    Codigo_NotaFiscal_ INT PRIMARY KEY,
+    Data_NotaFiscal_ DATETIME NOT NULL,
+    ValorTotal_NotaFiscal_ DECIMAL,
+    Codigo_TipoPagamento_ DATETIME NOT NULL,
+    FK_TipoPagamento_IdTipoPagamento TINYINT NOT NULL
+);
+
+CREATE TABLE TipoPagamento (
+    IdTipoPagamento TINYINT PRIMARY KEY,
+    DescricaoTipoPag VARCHAR(64)
+);
+
+CREATE TABLE Relacionamento_13 (
+    FK_Pagamento_IdPagamento INT,
+    FK_Itens_IdItens SMALLINT,
+);
+
+CREATE TABLE Relacionamento_14 (
+    FK_Servicos_IdServicos INT,
+    FK_Pagamento_IdPagamento INT,
+);
+
+------ 
+
+ALTER TABLE Clientes ADD CONSTRAINT FK_Clientes_2
+    FOREIGN KEY (FK_Endereco_IdEndereco)
+    REFERENCES Endereco (IdEndereco)
+    ON DELETE CASCADE;
+
+ALTER TABLE Filiais ADD CONSTRAINT FK_Filiais_2
+    FOREIGN KEY (FK_Endereco_IdEndereco)
+    REFERENCES Endereco (IdEndereco)
+    ON DELETE CASCADE;
+
+ALTER TABLE Quartos ADD CONSTRAINT FK_Quartos_2
+    FOREIGN KEY (FK_Filiais_IdFilial)
+    REFERENCES Filiais (IdFilial);
+
+ALTER TABLE Quartos ADD CONSTRAINT FK_Quartos_3
+    FOREIGN KEY (FK_TiposQuarto_IdQuarto)
+    REFERENCES TiposQuarto (IdQuarto)
+    ON DELETE CASCADE;
+
+ALTER TABLE Quartos ADD CONSTRAINT FK_Quartos_4
+    FOREIGN KEY (FK_Reservas_IdReserva)
+    REFERENCES Reservas (IdReserva)
+    ON DELETE CASCADE;
+
+ALTER TABLE Funcionarios ADD CONSTRAINT FK_Funcionarios_2
+    FOREIGN KEY (FK_Filiais_IdFilial)
+    REFERENCES Filiais (IdFilial);
+
+ALTER TABLE Funcionarios ADD CONSTRAINT FK_Funcionarios_3
+    FOREIGN KEY (FK_TipoFuncionario_IdTipoFuncionario)
+    REFERENCES TipoFuncionario (IdTipoFuncionario)
+    ON DELETE CASCADE;
+
+ALTER TABLE Reservas ADD CONSTRAINT FK_Reservas_2
+    FOREIGN KEY (FK_Clientes_IdCliente)
+    REFERENCES Clientes (IdCliente)
+    ON DELETE CASCADE;
+
+ALTER TABLE Reservas ADD CONSTRAINT FK_Reservas_3
+    FOREIGN KEY (FK_Funcionarios_IdFuncionario)
+    REFERENCES Funcionarios (IdFuncionario);
+
+ALTER TABLE Pagamento ADD CONSTRAINT FK_Pagamento_2
+    FOREIGN KEY (FK_Reservas_IdReserva)
+    REFERENCES Reservas (IdReserva)
+    ON DELETE CASCADE;
+
+ALTER TABLE Pagamento ADD CONSTRAINT FK_Pagamento_2
+    FOREIGN KEY (FK_Pagamento_IdPagamento)
+    REFERENCES Pagamento (IdPagamento)
+    ON DELETE CASCADE;
+    
+ALTER TABLE Pagamento ADD CONSTRAINT FK_Pagamento_3
+    FOREIGN KEY (FK_TipoPagamento_IdTipoPagamento)
+    REFERENCES TipoPagamento (IdTipoPagamento)
+    ON DELETE CASCADE;
+
+ALTER TABLE Relacionamento_13 ADD CONSTRAINT FK_Relacionamento_13_1
+    FOREIGN KEY (FK_Pagamento_IdPagamento)
+    REFERENCES Pagamento (IdPagamento)
+    ON DELETE SET NULL;
+
+ALTER TABLE Relacionamento_13 ADD CONSTRAINT FK_Relacionamento_13_2
+    FOREIGN KEY (FK_Itens_IdItens)
+    REFERENCES Itens (IdItens)
+    ON DELETE SET NULL;
+
+ALTER TABLE Relacionamento_14 ADD CONSTRAINT FK_Relacionamento_14_1
+    FOREIGN KEY (FK_Servicos_IdServicos)
+    REFERENCES Servicos (IdServicos)
+    ON DELETE SET NULL;
+    
+ALTER TABLE Relacionamento_14 ADD CONSTRAINT FK_Relacionamento_14_2
+    FOREIGN KEY (FK_Pagamento_IdPagamento)
+    REFERENCES Pagamento (IdPagamento)
+    ON DELETE SET NULL;
